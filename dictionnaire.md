@@ -759,4 +759,4 @@ function prepareTextForTCPDF($text)
 
     return trim($text);
 }
-```php
+```
