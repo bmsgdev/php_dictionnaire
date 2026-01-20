@@ -729,4 +729,34 @@
     ```php
     system($command);
     ```
+143. **Pour reformater une chaîne de caractères (nettoyage, encodage UTF-8, suppression du HTML, compatible TCPDF).**
+```php
+function prepareTextForTCPDF($text)
+{
+    if (empty($text)) {
+        return '';
+    }
 
+    // Vérification et normalisation UTF-8
+    if (!mb_check_encoding($text, 'UTF-8')) {
+        $text = mb_convert_encoding($text, 'UTF-8', 'auto');
+    }
+
+    // Décodage des entités HTML (&nbsp;, &eacute;, etc.)
+    $text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8');
+
+    // Remplacement des espaces insécables
+    $text = str_replace("\xC2\xA0", ' ', $text);
+
+    // Suppression du HTML indésirable
+    $text = strip_tags($text);
+
+    // Nettoyage des espaces multiples
+    $text = preg_replace('/[ \t]+/', ' ', $text);
+
+    // Normalisation des sauts de ligne
+    $text = preg_replace("/\r\n|\r/", "\n", $text);
+
+    return trim($text);
+}
+```php
